@@ -18,3 +18,4 @@ C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\DiscreteGestureBasics-W
 C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\DiscreteGestureBasics-WPF\obj\x86\Debug\DiscreteGestureBasics-WPF.exe
 C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\DiscreteGestureBasics-WPF\obj\x86\Debug\DiscreteGestureBasics-WPF.pdb
 C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\DiscreteGestureBasics-WPF\bin\x86\Debug\Database\Hamza.gba
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\DiscreteGestureBasics-WPF\bin\x86\Debug\Database\comeGesture.gba

@@ -193,6 +193,54 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
         /// Should be called whenever a new BodyFrameArrivedEvent occurs
         /// </summary>
         /// <param name="bodies">Array of bodies to update</param>
+        /// 
+
+        /// <summary>
+        /// Returns the length of a vector from origin
+        /// </summary>
+        /// <param name="point">Point in space to find it's distance from origin</param>
+        /// <returns>Distance from origin</returns>
+        private static double VectorLength(CameraSpacePoint point)
+        {
+            var result = Math.Pow(point.X, 2) + Math.Pow(point.Y, 2) + Math.Pow(point.Z, 2);
+
+            result = Math.Sqrt(result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Finds the closest body from the sensor if any
+        /// </summary>
+        /// <param name="bodyFrame">A body frame</param>
+        /// <returns>Closest body, null of none</returns>
+        private static Body FindClosestBody(BodyFrame bodyFrame)
+        {
+            Body result = null;
+            double closestBodyDistance = double.MaxValue;
+
+            Body[] bodies = new Body[bodyFrame.BodyCount];
+            bodyFrame.GetAndRefreshBodyData(bodies);
+
+            foreach (var body in bodies)
+            {
+                if (body.IsTracked)
+                {
+                    var currentLocation = body.Joints[JointType.SpineBase].Position;
+
+                    var currentDistance = VectorLength(currentLocation);
+
+                    if (result == null || currentDistance < closestBodyDistance)
+                    {
+                        result = body;
+                        closestBodyDistance = currentDistance;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public void UpdateBodyFrame(Body[] bodies)
         {
             if (bodies != null)
@@ -205,8 +253,8 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
                     int penIndex = 0;
                     foreach (Body body in bodies)
                     {
+                       // FindClosestBody(bodies);
                         Pen drawPen = this.bodyColors[penIndex++];
-
                         if (body.IsTracked)
                         {
                             this.DrawClippedEdges(body, dc);

@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("database/hamza.gba")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("database/comegesture.gba")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("database/seated.gbd")]
 
 

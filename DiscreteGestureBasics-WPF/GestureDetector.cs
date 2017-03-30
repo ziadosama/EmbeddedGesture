@@ -10,6 +10,10 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
     using System.Collections.Generic;
     using Microsoft.Kinect;
     using Microsoft.Kinect.VisualGestureBuilder;
+    using System.Net.Sockets;
+    using System.Net;
+    using System.Text;
+    using System.IO;
 
     /// <summary>
     /// Gesture Detector class which listens for VisualGestureBuilderFrame events from the service
@@ -18,16 +22,25 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
     public class GestureDetector : IDisposable
     {
         /// <summary> Path to the gesture database that was trained with VGB </summary>
-        private readonly string gestureDatabase = @"Database\Hamza.gba";
+        private readonly string gestureDatabase = @"Database/comeGesture.gba";
 
         /// <summary> Name of the discrete gesture in the database that we want to track </summary>
-        private readonly string seatedGestureName = "Hamza";
+        ///  private readonly string seatedGestureName = "comeGesture";
 
         /// <summary> Gesture frame source which should be tied to a body tracking ID </summary>
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
 
         /// <summary> Gesture frame reader which will handle gesture events coming from the sensor </summary>
         private VisualGestureBuilderFrameReader vgbFrameReader = null;
+
+        private Socket s;
+
+        private IPAddress ip;
+        private int port;
+        private IPEndPoint remoteEP;
+        private TcpClient tcpclnt = new TcpClient();
+
+        private bool isConnected = false;
 
         /// <summary>
         /// Initializes a new instance of the GestureDetector class along with the gesture frame source and reader
@@ -45,9 +58,9 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
             {
                 throw new ArgumentNullException("gestureResultView");
             }
-            
+
             this.GestureResultView = gestureResultView;
-            
+
             // create the vgb source. The associated body tracking ID will be set when a valid body frame arrives from the sensor.
             this.vgbFrameSource = new VisualGestureBuilderFrameSource(kinectSensor, 0);
             this.vgbFrameSource.TrackingIdLost += this.Source_TrackingIdLost;
@@ -67,12 +80,51 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
                 // but for this program, we only want to track one discrete gesture from the database, so we'll load it by name
                 foreach (Gesture gesture in database.AvailableGestures)
                 {
-                    if (gesture.Name.Equals(this.seatedGestureName))
+                    if (gesture.Name.Equals("Hamza") || gesture.Name.Equals("Seated") || gesture.Name.Equals("comeGesture"))
                     {
                         this.vgbFrameSource.AddGesture(gesture);
                     }
                 }
             }
+        }
+
+        public void setup()
+        {
+            // String str = "192.168.0.149";
+            //str.Trim();
+            //this.ip = Dns.GetHostEntry(str).AddressList[0];
+            //this.port = 6001;
+            //remoteEP = new IPEndPoint(this.ip, this.port);
+            try
+            {
+                Console.WriteLine("Connecting.....");
+                IPAddress ipAd = IPAddress.Parse("192.168.0.149");
+                tcpclnt.Connect(ipAd , 6006);
+                Console.WriteLine("Connected");
+                Console.Write("Enter the string to be transmitted : ");
+                String str = Console.ReadLine();
+                Stream stm = tcpclnt.GetStream();
+
+                ASCIIEncoding asen = new ASCIIEncoding();
+                byte[] ba = asen.GetBytes(str);
+                Console.WriteLine("Transmitting.....");
+
+                stm.Write(ba, 0, ba.Length);
+
+                byte[] bb = new byte[100];
+                int k = stm.Read(bb, 0, 100);
+
+                for (int i = 0; i < k; i++)
+                    Console.Write(Convert.ToChar(bb[i]));
+
+                tcpclnt.Close();
+                isConnected = false;
+            }
+            catch (Exception e1)
+            {
+                Console.WriteLine("Error..... " + e1.StackTrace);
+            }
+            // this.s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Udp);
         }
 
         /// <summary> Gets the GestureResultView object which stores the detector results for display in the UI </summary>
@@ -158,6 +210,7 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
         /// <param name="e">event arguments</param>
         private void Reader_GestureFrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
         {
+
             VisualGestureBuilderFrameReference frameReference = e.FrameReference;
             using (VisualGestureBuilderFrame frame = frameReference.AcquireFrame())
             {
@@ -171,7 +224,7 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
                         // we only have one gesture in this source object, but you can get multiple gestures
                         foreach (Gesture gesture in this.vgbFrameSource.Gestures)
                         {
-                            if (gesture.Name.Equals(this.seatedGestureName) && gesture.GestureType == GestureType.Discrete)
+                            if ((gesture.Name.Equals("Hamza") || gesture.Name.Equals("Seated") || gesture.Name.Equals("comeGesture")))
                             {
                                 DiscreteGestureResult result = null;
                                 discreteResults.TryGetValue(gesture, out result);
@@ -180,6 +233,7 @@ namespace Microsoft.Samples.Kinect.DiscreteGestureBasics
                                 {
                                     // update the GestureResultView object with new gesture result values
                                     this.GestureResultView.UpdateGestureResult(true, result.Detected, result.Confidence);
+
                                 }
                             }
                         }
