@@ -1,0 +1,108 @@
+﻿<grammar version="1.0" xml:lang="en-US" root="rootRule" tag-format="semantics/1.0-literals" xmlns="http://www.w3.org/2001/06/grammar">
+  <rule id="rootRule">
+    <one-of>
+      <item>
+        <tag>FORWARD</tag>
+        <one-of>
+          <item> forwards </item>
+          <item> forward </item>
+          <item> straight </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>BACKWARD</tag>
+        <one-of>
+          <item> backward </item>
+          <item> backwards </item>
+          <item> back </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>LEFT</tag>
+        <one-of>
+          <item> turn left </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>RIGHT</tag>
+        <one-of>
+          <item> turn right </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  COME MAX </tag>
+        <one-of>
+          <item> come max </item>
+          <item> max come </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  COME PINGO </tag>
+        <one-of>
+          <item> come pingo </item>
+          <item> pingo come </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  COME </tag>
+        <one-of>
+          <item> come </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  BARK MAX </tag>
+        <one-of>
+          <item> bark max </item>
+          <item> max bark </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  BARK PINGO </tag>
+        <one-of>
+          <item> bark pingo </item>
+          <item> pingo bark </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  BARK </tag>
+        <one-of>
+          <item> bark </item>
+        </one-of>
+      </item>
+      <item>
+        <tag> FETCH MAX </tag>
+        <one-of>
+          <item> fetch max </item>
+          <item>  max fetch </item>
+        </one-of>
+      </item>
+      <item>
+        <tag> FETCH PINGO </tag>
+        <one-of>
+          <item> fetch pingo </item>
+          <item>  pingo fetch </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  FOLLOW MAX </tag>
+        <one-of>
+          <item> follow max </item>
+          <item> max follow </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  FOLLOW PINGO </tag>
+        <one-of>
+          <item> follow pingo </item>
+          <item> pingo follow </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  SYNCHRONIZE </tag>
+        <one-of>
+          <item> synchronize </item>
+        </one-of>
+      </item>
+    </one-of>
+  </rule>
+</grammar>
