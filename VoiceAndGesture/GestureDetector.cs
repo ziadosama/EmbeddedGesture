@@ -14,38 +14,17 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
     using System.Net.Sockets;
     using System.Text;
 
-    /// <summary>
-    /// Gesture Detector class which listens for VisualGestureBuilderFrame events from the service
-    /// and updates the associated GestureResultView object with the latest results for the 'Seated' gesture
-    /// </summary>
     public class GestureDetector : IDisposable
     {
-        /// <summary> Path to the gesture database that was trained with VGB </summary>
-        private readonly string gestureDatabase = @"C:/Users/ziadosama/Documents/Visual Studio 2015/Projects/DiscreteGestureBasics-WPF/Database/Hamza.gba";
+        private readonly string gestureDatabase = @"Database/Hamza.gba";
+        private readonly string gestureDatabase1 = @"Database/comeGesture.gba";
+        private readonly string gestureDatabase2 = @"Database/followGest2.gba";
+        private readonly string gestureDatabase3 = @"Database/syncGest.gba";
 
-        /// <summary> Name of the discrete gesture in the database that we want to track </summary>
-        ///  private readonly string seatedGestureName = "comeGesture";
-
-        /// <summary> Gesture frame source which should be tied to a body tracking ID </summary>
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
 
-        /// <summary> Gesture frame reader which will handle gesture events coming from the sensor </summary>
         private VisualGestureBuilderFrameReader vgbFrameReader = null;
 
-        private Socket s;
-
-        private IPAddress ip;
-        private int port;
-        private IPEndPoint remoteEP;
-        private UdpClient tcpclnt = new UdpClient();
-
-        private bool isConnected = false;
-
-        /// <summary>
-        /// Initializes a new instance of the GestureDetector class along with the gesture frame source and reader
-        /// </summary>
-        /// <param name="kinectSensor">Active sensor to initialize the VisualGestureBuilderFrameSource object with</param>
-        /// <param name="gestureResultView">GestureResultView object to store gesture results of a single body to</param>
         public GestureDetector(KinectSensor kinectSensor, GestureResultView gestureResultView)
         {
             if (kinectSensor == null)
@@ -71,61 +50,60 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                 this.vgbFrameReader.IsPaused = true;
                 this.vgbFrameReader.FrameArrived += this.Reader_GestureFrameArrived;
             }
-
             // load the 'Seated' gesture from the gesture database
-            using (VisualGestureBuilderDatabase database = new VisualGestureBuilderDatabase(this.gestureDatabase))
+            using (VisualGestureBuilderDatabase database = new VisualGestureBuilderDatabase(gestureDatabase))
             {
                 // we could load all available gestures in the database with a call to vgbFrameSource.AddGestures(database.AvailableGestures), 
                 // but for this program, we only want to track one discrete gesture from the database, so we'll load it by name
                 foreach (Gesture gesture in database.AvailableGestures)
                 {
-                    if (gesture.Name.Equals("Hamza") || gesture.Name.Equals("followGest") || gesture.Name.Equals("syncGest") || gesture.Name.Equals("comeGesture"))
+                    if (gesture.Name.Equals("Hamza"))
                     {
-                        Console.WriteLine(gesture.Name);
                         this.vgbFrameSource.AddGesture(gesture);
 
                     }
                 }
+                using (VisualGestureBuilderDatabase database1 = new VisualGestureBuilderDatabase(gestureDatabase1))
+                {
+                    foreach (Gesture gesture in database1.AvailableGestures)
+                    {
+                        if (gesture.Name.Equals("comeGesture"))
+                        {
+                            this.vgbFrameSource.AddGesture(gesture);
+
+                        }
+                    }
+
+                }
+                using (VisualGestureBuilderDatabase database2 = new VisualGestureBuilderDatabase(gestureDatabase2))
+                {
+                    foreach (Gesture gesture in database2.AvailableGestures)
+                    {
+                        if (gesture.Name.Equals("followGest"))
+                        {
+                            this.vgbFrameSource.AddGesture(gesture);
+
+                        }
+                    }
+
+                }
+                using (VisualGestureBuilderDatabase database3 = new VisualGestureBuilderDatabase(gestureDatabase3))
+                {
+                    foreach (Gesture gesture in database3.AvailableGestures)
+                    {
+                        if (gesture.Name.Equals("syncGest"))
+                        {
+                            this.vgbFrameSource.AddGesture(gesture);
+
+                        }
+                    }
+
+                }
             }
         }
 
-        public void setup()
-        {
-            String str = "192.168.0.149";
-            this.port = 6001;
-            remoteEP = new IPEndPoint(IPAddress.Parse(str), this.port);
-            try
-            {
-                Console.WriteLine("Connecting.....");
-                tcpclnt.Connect(remoteEP);
-                Console.WriteLine("Connected");
-
-                // send data
-                tcpclnt.Send(new byte[] { 1, 2, 3, 4, 5 }, 5);
-
-                // then receive data
-                var receivedData = tcpclnt.Receive(ref remoteEP);
-
-                Console.Write("receive data from " + remoteEP.ToString());
-
-                Console.Read();
-                tcpclnt.Close();
-                isConnected = false;
-            }
-            catch (Exception e1)
-            {
-                Console.WriteLine("Error..... " + e1.StackTrace);
-            }
-            // this.s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Udp);
-        }
-
-        /// <summary> Gets the GestureResultView object which stores the detector results for display in the UI </summary>
         public GestureResultView GestureResultView { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the body tracking ID associated with the current detector
-        /// The tracking ID can change whenever a body comes in/out of scope
-        /// </summary>
         public ulong TrackingId
         {
             get
@@ -142,10 +120,6 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether or not the detector is currently paused
-        /// If the body tracking ID associated with the detector is not valid, then the detector should be paused
-        /// </summary>
         public bool IsPaused
         {
             get
@@ -195,11 +169,8 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             }
         }
 
-        /// <summary>
-        /// Handles gesture detection results arriving from the sensor for the associated body tracking Id
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
+
+        //check result
         private void Reader_GestureFrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
         {
 
@@ -208,23 +179,23 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             {
                 if (frame != null)
                 {
-                    // get the discrete gesture results which arrived with the latest frame
                     IReadOnlyDictionary<Gesture, DiscreteGestureResult> discreteResults = frame.DiscreteGestureResults;
 
                     if (discreteResults != null)
                     {
-                        // we only have one gesture in this source object, but you can get multiple gestures
                         foreach (Gesture gesture in this.vgbFrameSource.Gestures)
                         {
-                            if (gesture.Name.Equals("Hamza") || gesture.Name.Equals("followGest") || gesture.Name.Equals("syncGest") || gesture.Name.Equals("comeGesture"))
+                            if (gesture.Name.Equals("Hamza") || gesture.Name.Equals("followGest2") || gesture.Name.Equals("syncGest") || gesture.Name.Equals("comeGesture"))
                             {
                                 DiscreteGestureResult result = null;
                                 discreteResults.TryGetValue(gesture, out result);
 
                                 if (result != null)
                                 {
-                                    // update the GestureResultView object with new gesture result values
                                     this.GestureResultView.UpdateGestureResult(true, result.Detected, result.Confidence);
+
+                                    if (result.Detected)
+                                        Console.WriteLine(gesture.Name);
 
                                 }
                             }
@@ -234,11 +205,6 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             }
         }
 
-        /// <summary>
-        /// Handles the TrackingIdLost event for the VisualGestureBuilderSource object
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
         private void Source_TrackingIdLost(object sender, TrackingIdLostEventArgs e)
         {
             // update the GestureResultView object to show the 'Not Tracked' image in the UI

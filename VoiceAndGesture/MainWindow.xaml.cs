@@ -32,8 +32,8 @@
         {
             // Speech utterance confidence below which we treat speech as if it hadn't been heard
             const double ConfidenceThreshold = 0.3;
-           // Console.Write("HI");
-           
+            // Console.Write("HI");
+
 
             if (e.Result.Confidence >= ConfidenceThreshold)
             {
@@ -78,7 +78,7 @@
                 }*/
             }
         }
-        
+
         private static RecognizerInfo TryGetKinectRecognizer()
         {
             IEnumerable<RecognizerInfo> recognizers;
@@ -222,7 +222,7 @@
 
             // open the sensor
             this.kinectSensor.Open();
-            
+
 
             // open the reader for the body frames
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
@@ -247,32 +247,21 @@
             int col0Row = 0;
             int col1Row = 0;
             int maxBodies = 1;
-            
+
             for (int i = 0; i < maxBodies; ++i)
             {
-                GestureResultView result = new GestureResultView(i, false, false, 0.0f);
+                GestureResultView result = new GestureResultView(i, false, false, 0.5f);
                 GestureDetector detector = new GestureDetector(this.kinectSensor, result);
-                detector.setup();
                 this.gestureDetectorList.Add(detector);
 
                 // split gesture results across the first two columns of the content grid
                 ContentControl contentControl = new ContentControl();
                 contentControl.Content = this.gestureDetectorList[i].GestureResultView;
 
-                if (i % 2 == 0)
-                {
-                    // Gesture results for bodies: 0, 2, 4
-                    Grid.SetColumn(contentControl, 0);
-                    Grid.SetRow(contentControl, col0Row);
-                    ++col0Row;
-                }
-                else
-                {
-                    // Gesture results for bodies: 1, 3, 5
-                    Grid.SetColumn(contentControl, 1);
-                    Grid.SetRow(contentControl, col1Row);
-                    ++col1Row;
-                }
+                // Gesture results for bodies: 0, 2, 4
+                Grid.SetColumn(contentControl, 0);
+                Grid.SetRow(contentControl, col0Row);
+                ++col0Row;
 
                 this.contentGrid.Children.Add(contentControl);
             }
@@ -431,5 +420,5 @@
 
 
 
-   
+
 }
