@@ -10,7 +10,7 @@
   <Class Name="Microsoft.Samples.Kinect.SpeechBasics.GestureDetector" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEAIAAEACAAAAgAAAABwAAAIAAAIAgAAIAgAQCAAAA=</HashCode>
+      <HashCode>AAAAIAAEACAAAAAAAAABgFgAIAAgIAAAAAAgAQAAAAA=</HashCode>
       <FileName>GestureDetector.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -37,10 +37,10 @@
       <FileName>KinectBodyView.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Samples.Kinect.SpeechBasics.MainWindow" BaseTypeListCollapsed="true">
+  <Class Name="Microsoft.Samples.Kinect.SpeechBasics.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="7" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABCEBLAAAEIAAAASAQAAAgAAgAMAAAAAAAIIACAAAAA=</HashCode>
+      <HashCode>ABAEBLAAAEIAAAACAAAgAgAAgAMAAAAAAAIIAiAAAAA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />

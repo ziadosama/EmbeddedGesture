@@ -11,9 +11,10 @@
     using System.Text;
     using System.Windows;
     using System.Windows.Controls;
-
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        enum dog { Pingo, Max, both }
+
         /// <summary> Active Kinect sensor </summary>
         private KinectSensor kinectSensor = null;
 
@@ -34,48 +35,57 @@
             const double ConfidenceThreshold = 0.3;
             // Console.Write("HI");
 
-
             if (e.Result.Confidence >= ConfidenceThreshold)
             {
-                ///Console.Write("-------------------\n");
-                // Print recognized word
-                Console.Write(e.Result.Semantics.Value.ToString());
-                Console.Write("\n");
-
-                /*switch (e.Result.Semantics.Value.ToString())
+                if (e.Result.Semantics.Value.ToString() == "FOLLOW PINGO")
                 {
-                    case "FORWARD":
-                        forwardSpan.Foreground = Brushes.DeepSkyBlue;
-                        forwardSpan.FontWeight = FontWeights.Bold;
-                        turtleTranslation.X = (playArea.Width + turtleTranslation.X + (DisplacementAmount * Displacements[this.curDirection].X)) % playArea.Width;
-                        turtleTranslation.Y = (playArea.Height + turtleTranslation.Y + (DisplacementAmount * Displacements[this.curDirection].Y)) % playArea.Height;
-                        break;
-
-                    case "BACKWARD":
-                        backSpan.Foreground = Brushes.DeepSkyBlue;
-                        backSpan.FontWeight = FontWeights.Bold;
-                        turtleTranslation.X = (playArea.Width + turtleTranslation.X - (DisplacementAmount * Displacements[this.curDirection].X)) % playArea.Width;
-                        turtleTranslation.Y = (playArea.Height + turtleTranslation.Y - (DisplacementAmount * Displacements[this.curDirection].Y)) % playArea.Height;
-                        break;
-
-                    case "LEFT":
-                        leftSpan.Foreground = Brushes.DeepSkyBlue;
-                        leftSpan.FontWeight = FontWeights.Bold;
-                        this.curDirection = TurnLeft[this.curDirection];
-
-                        // We take a left turn to mean a counter-clockwise right angle rotation for the displayed turtle.
-                        turtleRotation.Angle -= DegreesInRightAngle;
-                        break;
-
-                    case "RIGHT":
-                        rightSpan.Foreground = Brushes.DeepSkyBlue;
-                        rightSpan.FontWeight = FontWeights.Bold;
-                        this.curDirection = TurnRight[this.curDirection];
-
-                        // We take a right turn to mean a clockwise right angle rotation for the displayed turtle.
-                        turtleRotation.Angle += DegreesInRightAngle;
-                        break;
-                }*/
+                    GestureAndSpeech.follow[(int)dog.Pingo] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "FOLLOW MAX")
+                {
+                    GestureAndSpeech.follow[(int)dog.Max] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "FETCH PINGO")
+                {
+                    GestureAndSpeech.fetch[(int)dog.Pingo] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "FETCH MAX")
+                {
+                    GestureAndSpeech.fetch[(int)dog.Max] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "BARK PINGO")
+                {
+                    GestureAndSpeech.bark[(int)dog.Pingo] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "BARK MAX")
+                {
+                    GestureAndSpeech.bark[(int)dog.Max] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "COME PINGO")
+                {
+                    GestureAndSpeech.come[(int)dog.Pingo] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "COME MAX")
+                {
+                    GestureAndSpeech.come[(int)dog.Max] = true;
+                }
+                else if (e.Result.Semantics.Value.ToString() == "COME")
+                {
+                    GestureAndSpeech.come[(int)dog.both] = true;
+                }
+                else
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        GestureAndSpeech.follow[i] = false;
+                        GestureAndSpeech.come[i] = false;
+                        GestureAndSpeech.bark[i] = false;
+                        GestureAndSpeech.fetch[i] = false;
+                    }
+                    GestureAndSpeech.come[2] = false;
+                    GestureAndSpeech.bark[2] = false;
+                    GestureAndSpeech.sync = false;
+                }
             }
         }
 
@@ -245,26 +255,20 @@
 
             // create a gesture detector for each body (6 bodies => 6 detectors) and create content controls to display results in the UI
             int col0Row = 0;
-            int col1Row = 0;
-            int maxBodies = 1;
+            GestureResultView result = new GestureResultView(0, false, false, 0.8f);
+            GestureDetector detector = new GestureDetector(this.kinectSensor, result);
+            this.gestureDetectorList.Add(detector);
 
-            for (int i = 0; i < maxBodies; ++i)
-            {
-                GestureResultView result = new GestureResultView(i, false, false, 0.5f);
-                GestureDetector detector = new GestureDetector(this.kinectSensor, result);
-                this.gestureDetectorList.Add(detector);
+            // split gesture results across the first two columns of the content grid
+            ContentControl contentControl = new ContentControl();
+            contentControl.Content = this.gestureDetectorList[0].GestureResultView;
 
-                // split gesture results across the first two columns of the content grid
-                ContentControl contentControl = new ContentControl();
-                contentControl.Content = this.gestureDetectorList[i].GestureResultView;
+            // Gesture results for bodies: 0, 2, 4
+            Grid.SetColumn(contentControl, 0);
+            Grid.SetRow(contentControl, col0Row);
+            ++col0Row;
 
-                // Gesture results for bodies: 0, 2, 4
-                Grid.SetColumn(contentControl, 0);
-                Grid.SetRow(contentControl, col0Row);
-                ++col0Row;
-
-                this.contentGrid.Children.Add(contentControl);
-            }
+            this.contentGrid.Children.Add(contentControl);
         }
 
         /// <summary>
@@ -352,21 +356,12 @@
                 this.speechEngine.RecognizeAsyncStop();
             }
         }
-
-        /// <summary>
-        /// Handles the event when the sensor becomes unavailable (e.g. paused, closed, unplugged).
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
+        
         private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
         {
+            Console.WriteLine("sensor is available changed");
         }
-
-        /// <summary>
-        /// Handles the body frame data arriving from the sensor and updates the associated gesture detector object for each body
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
+        
         private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
             bool dataReceived = false;
@@ -377,18 +372,12 @@
                 {
                     if (this.bodies == null)
                     {
-                        // creates an array of 6 bodies, which is the max number of bodies that Kinect can track simultaneously
                         this.bodies = new Body[bodyFrame.BodyCount];
                     }
-
-                    // The first time GetAndRefreshBodyData is called, Kinect will allocate each Body in the array.
-                    // As long as those body objects are not disposed and not set to null in the array,
-                    // those body objects will be re-used.
                     bodyFrame.GetAndRefreshBodyData(this.bodies);
                     dataReceived = true;
                 }
             }
-
             if (dataReceived)
             {
                 // visualize the new body data
@@ -397,21 +386,16 @@
                 // we may have lost/acquired bodies, so update the corresponding gesture detectors
                 if (this.bodies != null)
                 {
-                    // loop through all bodies to see if any of the gesture detectors need to be updated
-                    int maxBodies = 1;
-                    for (int i = 0; i < maxBodies; ++i)
+                    Body body = this.bodies[0];
+                    ulong trackingId = body.TrackingId;
+                    // if the current body TrackingId changed, update the corresponding gesture detector with the new value
+                    if (trackingId != this.gestureDetectorList[0].TrackingId)
                     {
-                        Body body = this.bodies[i];
-                        ulong trackingId = body.TrackingId;
-                        // if the current body TrackingId changed, update the corresponding gesture detector with the new value
-                        if (trackingId != this.gestureDetectorList[i].TrackingId)
-                        {
-                            this.gestureDetectorList[i].TrackingId = trackingId;
+                        this.gestureDetectorList[0].TrackingId = trackingId;
 
-                            // if the current body is tracked, unpause its detector to get VisualGestureBuilderFrameArrived events
-                            // if the current body is not tracked, pause its detector so we don't waste resources trying to get invalid gesture results
-                            this.gestureDetectorList[i].IsPaused = trackingId == 0;
-                        }
+                        // if the current body is tracked, unpause its detector to get VisualGestureBuilderFrameArrived events
+                        // if the current body is not tracked, pause its detector so we don't waste resources trying to get invalid gesture results
+                        this.gestureDetectorList[0].IsPaused = trackingId == 0;
                     }
                 }
             }
