@@ -24,7 +24,7 @@ int main(void)
 
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_port = htons(11000);
-  serv_addr.sin_addr.s_addr = 0;
+  serv_addr.sin_addr.s_addr = inet_addr("192.168.1.166");
 
   if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr))<0)
     {
