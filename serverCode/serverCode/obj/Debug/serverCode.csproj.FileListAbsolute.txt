@@ -1,0 +1,6 @@
+c:\users\ziadosama\documents\visual studio 2015\Projects\serverCode\serverCode\bin\Debug\serverCode.exe.config
+c:\users\ziadosama\documents\visual studio 2015\Projects\serverCode\serverCode\bin\Debug\serverCode.exe
+c:\users\ziadosama\documents\visual studio 2015\Projects\serverCode\serverCode\bin\Debug\serverCode.pdb
+c:\users\ziadosama\documents\visual studio 2015\Projects\serverCode\serverCode\obj\Debug\serverCode.csprojResolveAssemblyReference.cache
+c:\users\ziadosama\documents\visual studio 2015\Projects\serverCode\serverCode\obj\Debug\serverCode.exe
+c:\users\ziadosama\documents\visual studio 2015\Projects\serverCode\serverCode\obj\Debug\serverCode.pdb
