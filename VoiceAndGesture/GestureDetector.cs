@@ -10,9 +10,6 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
     using Microsoft.Kinect.VisualGestureBuilder;
     using System;
     using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Text;
 
     public class GestureDetector : IDisposable
     {
@@ -24,13 +21,12 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
 
         private VisualGestureBuilderFrameReader vgbFrameReader = null;
-
-        private bool[] followSp;
+        
         static string printNew;
         static string printOld = "";
         /// public bool comeSpeech, comeGesture, followSpeech, followGesture, syncSpeech, syncGesture;
         ///bool[] comeSpeech = new bool[3];
-
+        
 
         public GestureDetector(KinectSensor kinectSensor, GestureResultView gestureResultView)
         {
@@ -209,14 +205,21 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                     {
                                                         printNew = "follow pingo speech & gesture";
                                                         if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient1("follow");
                                                             Console.WriteLine(printNew);
+
+                                                        }
                                                         printOld = printNew;
                                                     }
                                                     else if (GestureAndSpeech.follow[1])
                                                     {
                                                         printNew = "follow max speech & gesture";
                                                         if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient2("follow");
                                                             Console.WriteLine(printNew);
+                                                        }
                                                         printOld = printNew;
                                                     }
                                                 }
@@ -228,14 +231,20 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                     {
                                                         printNew = "fetch pingo speech & gesture";
                                                         if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient1("fetch");
                                                             Console.WriteLine(printNew);
+                                                        }
                                                         printOld = printNew;
                                                     }
                                                     else if (GestureAndSpeech.fetch[1])
                                                     {
                                                         printNew = "fetch max speech & gesture";
                                                         if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient2("fetch");
                                                             Console.WriteLine(printNew);
+                                                        }
                                                         printOld = printNew;
                                                     }
                                                 }
@@ -247,21 +256,46 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                     {
                                                         printNew = "come pingo speech & gesture";
                                                         if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient1("come");
                                                             Console.WriteLine(printNew);
+                                                        }
                                                         printOld = printNew;
                                                     }
                                                     else if (GestureAndSpeech.come[1])
                                                     {
                                                         printNew = "come max speech & gesture";
                                                         if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient2("come");
                                                             Console.WriteLine(printNew);
+                                                        }
                                                         printOld = printNew;
                                                     }
                                                     else if (GestureAndSpeech.come[2])
                                                     {
                                                         printNew = "come both speech & gesture";
                                                         if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient1("come");
+                                                            Server.sendClient2("come");
                                                             Console.WriteLine(printNew);
+                                                        }
+                                                        printOld = printNew;
+                                                    }
+                                                }
+                                                break;
+                                            case "syncGest":
+                                                {
+                                                    if (GestureAndSpeech.sync)
+                                                    {
+                                                        printNew = "sync both speech & gesture";
+                                                        if (printNew != printOld)
+                                                        {
+                                                            Server.sendClient1("sync");
+                                                            Server.sendClient2("sync");
+                                                            Console.WriteLine(printNew);
+                                                        }
                                                         printOld = printNew;
                                                     }
                                                 }

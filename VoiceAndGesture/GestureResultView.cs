@@ -28,6 +28,10 @@
 
         private bool isTracked = false;
 
+          /// <param name="bodyIndex">Body Index associated with the current gesture detector</param>
+         /// <param name="isTracked">True, if the body is currently tracked</param>
+         /// <param name="detected">True, if the gesture is currently detected for the associated body</param>
+        /// <param name="confidence">Confidence value for detection of the 'Seated' gesture</param>
         public GestureResultView(int bodyIndex, bool isTracked, bool detected, float confidence)
         {
             this.BodyIndex = bodyIndex;
@@ -141,6 +145,9 @@
             }
         }
 
+        /// <param name="isBodyTrackingIdValid">True, if the body associated with the GestureResultView object is still being tracked</param>
+         /// <param name="isGestureDetected">True, if the discrete gesture is currently detected for the associated body</param>
+         /// <param name="detectionConfidence">Confidence value for detection of the discrete gesture</param>
         public void UpdateGestureResult(bool isBodyTrackingIdValid, bool isGestureDetected, float detectionConfidence)
         {
             this.IsTracked = isBodyTrackingIdValid;
@@ -169,6 +176,7 @@
             }
         }
 
+        /// <param name="propertyName">Name of property that has changed</param> 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (this.PropertyChanged != null)

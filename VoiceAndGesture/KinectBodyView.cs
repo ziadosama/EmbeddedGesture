@@ -6,51 +6,106 @@
 
 namespace Microsoft.Samples.Kinect.SpeechBasics
 {
+    using Microsoft.Kinect;
     using System;
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
-    using Microsoft.Kinect;
 
     /// <summary>
     /// Visualizes the Kinect Body stream for display in the UI
     /// </summary>
     public sealed class KinectBodyView
     {
+        /// <summary>
+        /// Radius of drawn hand circles
+        /// </summary>
         private const double HandSize = 30;
-        
+
+        /// <summary>
+        /// Thickness of drawn joint lines
+        /// </summary>
         private const double JointThickness = 3;
-        
+
+        /// <summary>
+        /// Thickness of clip edge rectangles
+        /// </summary>
         private const double ClipBoundsThickness = 10;
-        
+
+        /// <summary>
+        /// Constant for clamping Z values of camera space points from being negative
+        /// </summary>
         private const float InferredZPositionClamp = 0.1f;
-        
+
+        /// <summary>
+        /// Brush used for drawing hands that are currently tracked as closed
+        /// </summary>
         private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0));
-        
+
+        /// <summary>
+        /// Brush used for drawing hands that are currently tracked as opened
+        /// </summary>
         private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0));
-        
+
+        /// <summary>
+        /// Brush used for drawing hands that are currently tracked as in lasso (pointer) position
+        /// </summary>
         private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255));
-        
+
+        /// <summary>
+        /// Brush used for drawing joints that are currently tracked
+        /// </summary>
         private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
-      
+
+        /// <summary>
+        /// Brush used for drawing joints that are currently inferred
+        /// </summary>        
         private readonly Brush inferredJointBrush = Brushes.Yellow;
-       
+
+        /// <summary>
+        /// Pen used for drawing bones that are currently inferred
+        /// </summary>        
         private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
-        
+
+        /// <summary>
+        /// Drawing group for body rendering output
+        /// </summary>
         private DrawingGroup drawingGroup;
-        
+
+        /// <summary>
+        /// Drawing image that we will display
+        /// </summary>
         private DrawingImage imageSource;
-        
+
+        /// <summary>
+        /// Coordinate mapper to map one type of point to another
+        /// </summary>
         private CoordinateMapper coordinateMapper = null;
-        
+
+        /// <summary>
+        /// definition of bones
+        /// </summary>
         private List<Tuple<JointType, JointType>> bones;
-        
+
+        /// <summary>
+        /// Width of display (depth space)
+        /// </summary>
         private int displayWidth;
 
+        /// <summary>
+        /// Height of display (depth space)
+        /// </summary>
         private int displayHeight;
-        
+
+        /// <summary>
+        /// List of colors for each body tracked
+        /// </summary>
         private List<Pen> bodyColors;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the KinectBodyView class
+        /// </summary>
+        /// <param name="kinectSensor">Active instance of the KinectSensor</param>
         public KinectBodyView(KinectSensor kinectSensor)
         {
             if (kinectSensor == null)
@@ -121,7 +176,71 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             // Create an image source that we can use in our image control
             this.imageSource = new DrawingImage(this.drawingGroup);
         }
-        
+
+        /// <summary>
+        /// Gets the bitmap to display
+        /// </summary>
+        public ImageSource ImageSource
+        {
+            get
+            {
+                return this.imageSource;
+            }
+        }
+
+        /// <summary>
+        /// Updates the body array with new information from the sensor
+        /// Should be called whenever a new BodyFrameArrivedEvent occurs
+        /// </summary>
+        /// <param name="bodies">Array of bodies to update</param>
+        /// 
+
+        /// <summary>
+        /// Returns the length of a vector from origin
+        /// </summary>
+        /// <param name="point">Point in space to find it's distance from origin</param>
+        /// <returns>Distance from origin</returns>
+        private static double VectorLength(CameraSpacePoint point)
+        {
+            var result = Math.Pow(point.X, 2) + Math.Pow(point.Y, 2) + Math.Pow(point.Z, 2);
+
+            result = Math.Sqrt(result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Finds the closest body from the sensor if any
+        /// </summary>
+        /// <param name="bodyFrame">A body frame</param>
+        /// <returns>Closest body, null of none</returns>
+        private static Body FindClosestBody(BodyFrame bodyFrame)
+        {
+            Body result = null;
+            double closestBodyDistance = double.MaxValue;
+
+            Body[] bodies = new Body[bodyFrame.BodyCount];
+            bodyFrame.GetAndRefreshBodyData(bodies);
+
+            foreach (var body in bodies)
+            {
+                if (body.IsTracked)
+                {
+                    var currentLocation = body.Joints[JointType.SpineBase].Position;
+
+                    var currentDistance = VectorLength(currentLocation);
+
+                    if (result == null || currentDistance < closestBodyDistance)
+                    {
+                        result = body;
+                        closestBodyDistance = currentDistance;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public void UpdateBodyFrame(Body[] bodies)
         {
             if (bodies != null)
@@ -171,7 +290,14 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Draws a body
+        /// </summary>
+        /// <param name="joints">joints to draw</param>
+        /// <param name="jointPoints">translated positions of joints to draw</param>
+        /// <param name="drawingContext">drawing context to draw to</param>
+        /// <param name="drawingPen">specifies color to draw a specific body</param>
         private void DrawBody(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, DrawingContext drawingContext, Pen drawingPen)
         {
             // Draw the bones
@@ -202,7 +328,16 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Draws one bone of a body (joint to joint)
+        /// </summary>
+        /// <param name="joints">joints to draw</param>
+        /// <param name="jointPoints">translated positions of joints to draw</param>
+        /// <param name="jointType0">first joint of bone to draw</param>
+        /// <param name="jointType1">second joint of bone to draw</param>
+        /// <param name="drawingContext">drawing context to draw to</param>
+        /// /// <param name="drawingPen">specifies color to draw a specific bone</param>
         private void DrawBone(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, JointType jointType0, JointType jointType1, DrawingContext drawingContext, Pen drawingPen)
         {
             Joint joint0 = joints[jointType0];
@@ -224,7 +359,13 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
 
             drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
         }
-        
+
+        /// <summary>
+        /// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
+        /// </summary>
+        /// <param name="handState">state of the hand</param>
+        /// <param name="handPosition">position of the hand</param>
+        /// <param name="drawingContext">drawing context to draw to</param>
         private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
         {
             switch (handState)
@@ -242,7 +383,12 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                     break;
             }
         }
-        
+
+        /// <summary>
+        /// Draws indicators to show which edges are clipping body data
+        /// </summary>
+        /// <param name="body">body to draw clipping information for</param>
+        /// <param name="drawingContext">drawing context to draw to</param>
         private void DrawClippedEdges(Body body, DrawingContext drawingContext)
         {
             FrameEdges clippedEdges = body.ClippedEdges;

@@ -73,6 +73,10 @@
                 {
                     GestureAndSpeech.come[(int)dog.both] = true;
                 }
+                else if (e.Result.Semantics.Value.ToString() == "SYNCHRONIZE")
+                {
+                    GestureAndSpeech.sync = true;
+                }
                 else
                 {
                     for (int i = 0; i < 2; i++)
@@ -117,16 +121,11 @@
             return null;
         }
 
-        /// <summary>
-        /// Execute initialization tasks.
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            Server.StartListening();
             // Only one sensor is supported
             this.kinectSensor = KinectSensor.GetDefault();
-
             if (this.kinectSensor != null)
             {
                 // open the sensor
@@ -151,28 +150,6 @@
             {
 
                 this.speechEngine = new SpeechRecognitionEngine(ri.Id);
-
-                /****************************************************************
-                * 
-                * Use this code to create grammar programmatically rather than from
-                * a grammar file.
-                * 
-                * var directions = new Choices();
-                * directions.Add(new SemanticResultValue("forward", "FORWARD"));
-                * directions.Add(new SemanticResultValue("forwards", "FORWARD"));
-                * directions.Add(new SemanticResultValue("straight", "FORWARD"));
-                * directions.Add(new SemanticResultValue("backward", "BACKWARD"));
-                * directions.Add(new SemanticResultValue("backwards", "BACKWARD"));
-                * directions.Add(new SemanticResultValue("back", "BACKWARD"));
-                * directions.Add(new SemanticResultValue("turn left", "LEFT"));
-                * directions.Add(new SemanticResultValue("turn right", "RIGHT"));
-                *
-                * var gb = new GrammarBuilder { Culture = ri.Culture };
-                * gb.Append(directions);
-                *
-                * var g = new Grammar(gb);
-                * 
-                ****************************************************************/
 
                 // Create a grammar from grammar definition XML file.
                 using (var memoryStream = new MemoryStream(Encoding.ASCII.GetBytes(Properties.Resources.SpeechGrammar)))
@@ -206,6 +183,8 @@
         /// <summary> Array for the bodies (Kinect will track up to 6 people simultaneously) </summary>
         private Body[] bodies = null;
 
+        private Server serve = new Server();
+
         /// <summary> Reader for body frames </summary>
         private BodyFrameReader bodyFrameReader = null;
 
@@ -224,6 +203,7 @@
         /// 
         public MainWindow()
         {
+
             // only one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
 
@@ -255,7 +235,7 @@
 
             // create a gesture detector for each body (6 bodies => 6 detectors) and create content controls to display results in the UI
             int col0Row = 0;
-            GestureResultView result = new GestureResultView(0, false, false, 0.8f);
+            GestureResultView result = new GestureResultView(0, false, false, 0.5f);
             GestureDetector detector = new GestureDetector(this.kinectSensor, result);
             this.gestureDetectorList.Add(detector);
 
@@ -355,13 +335,15 @@
                 this.speechEngine.SpeechRecognitionRejected -= this.SpeechRejected;
                 this.speechEngine.RecognizeAsyncStop();
             }
+           // Server.destructClient1();
+            Server.destructClient2();
         }
-        
+
         private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
         {
             Console.WriteLine("sensor is available changed");
         }
-        
+
         private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
             bool dataReceived = false;
@@ -383,19 +365,23 @@
                 // visualize the new body data
                 this.kinectBodyView.UpdateBodyFrame(this.bodies);
 
+                int maxBodies = 1;
                 // we may have lost/acquired bodies, so update the corresponding gesture detectors
                 if (this.bodies != null)
                 {
-                    Body body = this.bodies[0];
-                    ulong trackingId = body.TrackingId;
-                    // if the current body TrackingId changed, update the corresponding gesture detector with the new value
-                    if (trackingId != this.gestureDetectorList[0].TrackingId)
+                    for (int i = 0; i < maxBodies; i++)
                     {
-                        this.gestureDetectorList[0].TrackingId = trackingId;
+                        Body body = this.bodies[i];
+                        ulong trackingId = body.TrackingId;
+                        // if the current body TrackingId changed, update the corresponding gesture detector with the new value
+                        if (trackingId != this.gestureDetectorList[i].TrackingId)
+                        {
+                            this.gestureDetectorList[i].TrackingId = trackingId;
 
-                        // if the current body is tracked, unpause its detector to get VisualGestureBuilderFrameArrived events
-                        // if the current body is not tracked, pause its detector so we don't waste resources trying to get invalid gesture results
-                        this.gestureDetectorList[0].IsPaused = trackingId == 0;
+                            // if the current body is tracked, unpause its detector to get VisualGestureBuilderFrameArrived events
+                            // if the current body is not tracked, pause its detector so we don't waste resources trying to get invalid gesture results
+                            this.gestureDetectorList[i].IsPaused = trackingId == 0;
+                        }
                     }
                 }
             }

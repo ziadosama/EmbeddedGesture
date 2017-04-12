@@ -9,7 +9,7 @@
         <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
         <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
         <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />
-        
+
         <DataTemplate DataType="{x:Type local:GestureResultView}">
             <Grid Width="Auto" Margin="5" Background="{Binding BodyColor}">
                 <Grid.RowDefinitions>
@@ -24,9 +24,9 @@
                 <TextBlock Text="{Binding Confidence, StringFormat='Confidence: {0}'}" FontSize="18" FontFamily="Segoe UI" FontWeight="SemiBold" Grid.Row="3" Margin="5 0 0 0"/>
             </Grid>
         </DataTemplate>
-        
+
     </Window.Resources>
-    
+
     <Grid Margin="10 0 10 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -54,7 +54,6 @@
                 <Viewbox x:Name="kinectBodyViewbox">
                     <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
                 </Viewbox>
-                <TextBlock Text="This program can track up to 6 people simultaneously. Stand in front of the sensor to get tracked. Wave to trigger the 'Wave' gesture." TextWrapping="Wrap" Margin="5 10 5 5" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="14"/>
             </StackPanel>
         </Grid>
 
