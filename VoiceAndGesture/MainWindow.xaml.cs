@@ -33,7 +33,7 @@
         {
             // Speech utterance confidence below which we treat speech as if it hadn't been heard
             const double ConfidenceThreshold = 0.3;
-            // Console.Write("HI");
+            Console.WriteLine(e.Result.Semantics.Value.ToString());
 
             if (e.Result.Confidence >= ConfidenceThreshold)
             {
@@ -123,7 +123,7 @@
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            Server.StartListening();
+          //  Server.StartListening();
             // Only one sensor is supported
             this.kinectSensor = KinectSensor.GetDefault();
             if (this.kinectSensor != null)
@@ -336,7 +336,7 @@
                 this.speechEngine.RecognizeAsyncStop();
             }
            // Server.destructClient1();
-            Server.destructClient2();
+           // Server.destructClient2();
         }
 
         private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
