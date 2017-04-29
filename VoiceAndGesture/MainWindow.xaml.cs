@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Text;
@@ -28,13 +29,13 @@
         /// </summary>
         private SpeechRecognitionEngine speechEngine = null;
 
+
         /// ********Handling the speech recognized event
         private void SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             // Speech utterance confidence below which we treat speech as if it hadn't been heard
-            const double ConfidenceThreshold = 0.3;
+            const double ConfidenceThreshold = 0.5;
             Console.WriteLine(e.Result.Semantics.Value.ToString());
-
             if (e.Result.Confidence >= ConfidenceThreshold)
             {
                 if (e.Result.Semantics.Value.ToString() == "FOLLOW PINGO")
@@ -77,7 +78,15 @@
                 {
                     GestureAndSpeech.sync = true;
                 }
-                else
+                else if (e.Result.Semantics.Value.ToString() == "PLAY PINGO")
+                {
+                    Server.sendClient1("play");
+                }
+                else if (e.Result.Semantics.Value.ToString() == "PLAY MAX")
+                {
+                    Server.sendClient2("play");
+                }
+                else if (e.Result.Semantics.Value.ToString() == "REST")
                 {
                     for (int i = 0; i < 2; i++)
                     {
@@ -89,9 +98,12 @@
                     GestureAndSpeech.come[2] = false;
                     GestureAndSpeech.bark[2] = false;
                     GestureAndSpeech.sync = false;
+                    Server.sendClient1("stop");
+                    Server.sendClient2("stop");
                 }
             }
         }
+
 
         private static RecognizerInfo TryGetKinectRecognizer()
         {
@@ -123,7 +135,7 @@
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-          //  Server.StartListening();
+            //  Server.StartListening();
             // Only one sensor is supported
             this.kinectSensor = KinectSensor.GetDefault();
             if (this.kinectSensor != null)
@@ -335,8 +347,8 @@
                 this.speechEngine.SpeechRecognitionRejected -= this.SpeechRejected;
                 this.speechEngine.RecognizeAsyncStop();
             }
-           // Server.destructClient1();
-           // Server.destructClient2();
+            //Server.destructClient1();
+            // Server.destructClient2();
         }
 
         private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)

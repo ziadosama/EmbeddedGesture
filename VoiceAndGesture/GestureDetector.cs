@@ -13,20 +13,14 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
 
     public class GestureDetector : IDisposable
     {
-        private readonly string gestureDatabase = @"Database/comeGesture.gba";
-        private readonly string gestureDatabase1 = @"Database/Hamza.gba";
-        private readonly string gestureDatabase2 = @"Database/followGest2.gba";
-        private readonly string gestureDatabase3 = @"Database/syncGest.gba";
+        private readonly string gestureDatabase = @"Database/finale.gbd";
 
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
 
         private VisualGestureBuilderFrameReader vgbFrameReader = null;
-        
+
         static string printNew;
         static string printOld = "";
-        /// public bool comeSpeech, comeGesture, followSpeech, followGesture, syncSpeech, syncGesture;
-        ///bool[] comeSpeech = new bool[3];
-        
 
         public GestureDetector(KinectSensor kinectSensor, GestureResultView gestureResultView)
         {
@@ -41,69 +35,23 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             }
 
             this.GestureResultView = gestureResultView;
-            // create the vgb source. The associated body tracking ID will be set when a valid body frame arrives from the sensor.
             this.vgbFrameSource = new VisualGestureBuilderFrameSource(kinectSensor, 0);
             this.vgbFrameSource.TrackingIdLost += this.Source_TrackingIdLost;
-
-            // open the reader for the vgb frames
+            
             this.vgbFrameReader = this.vgbFrameSource.OpenReader();
             if (this.vgbFrameReader != null)
             {
                 this.vgbFrameReader.IsPaused = true;
                 this.vgbFrameReader.FrameArrived += this.Reader_GestureFrameArrived;
             }
-            // load the 'Seated' gesture from the gesture database
             using (VisualGestureBuilderDatabase database = new VisualGestureBuilderDatabase(gestureDatabase))
             {
-                // we could load all available gestures in the database with a call to vgbFrameSource.AddGestures(database.AvailableGestures), 
-                // but for this program, we only want to track one discrete gesture from the database, so we'll load it by name
                 foreach (Gesture gesture in database.AvailableGestures)
                 {
-                    if (gesture.Name.Equals("Hamza"))
-                    {
                         this.vgbFrameSource.AddGesture(gesture);
-
-                    }
-                }
-                using (VisualGestureBuilderDatabase database1 = new VisualGestureBuilderDatabase(gestureDatabase1))
-                {
-                    foreach (Gesture gesture in database1.AvailableGestures)
-                    {
-                        if (gesture.Name.Equals("comeGesture"))
-                        {
-                            this.vgbFrameSource.AddGesture(gesture);
-
-                        }
-                    }
-
-                }
-                using (VisualGestureBuilderDatabase database2 = new VisualGestureBuilderDatabase(gestureDatabase2))
-                {
-                    foreach (Gesture gesture in database2.AvailableGestures)
-                    {
-                        if (gesture.Name.Equals("followGest2"))
-                        {
-                            this.vgbFrameSource.AddGesture(gesture);
-
-                        }
-                    }
-
-                }
-                using (VisualGestureBuilderDatabase database3 = new VisualGestureBuilderDatabase(gestureDatabase3))
-                {
-                    foreach (Gesture gesture in database3.AvailableGestures)
-                    {
-                        if (gesture.Name.Equals("syncGest"))
-                        {
-                            this.vgbFrameSource.AddGesture(gesture);
-
-                        }
-                    }
-
                 }
             }
         }
-
         public GestureResultView GestureResultView { get; private set; }
 
         public ulong TrackingId
@@ -170,8 +118,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                 }
             }
         }
-
-        //check result
+        
         private void Reader_GestureFrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
         {
             VisualGestureBuilderFrameReference frameReference = e.FrameReference;
@@ -185,10 +132,11 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                     {
                         foreach (Gesture gesture in this.vgbFrameSource.Gestures)
                         {
-                            if (gesture.Name.Equals("Hamza") || gesture.Name.Equals("followGest2") || gesture.Name.Equals("syncGest") || gesture.Name.Equals("comeGesture"))
+                            if (gesture.Name.Equals("come") || gesture.Name.Equals("follow") || gesture.Name.Equals("sync") )
                             {
                                 DiscreteGestureResult result = null;
                                 discreteResults.TryGetValue(gesture, out result);
+
 
                                 if (result != null)
                                 {
@@ -198,7 +146,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                     {
                                         switch (gesture.Name)
                                         {
-                                            case "followGest2":
+                                            case "follow":
                                                 {
 
                                                     if (GestureAndSpeech.follow[0])
@@ -206,7 +154,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printNew = "follow pingo speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                           // Server.sendClient1("follow");
+                                                            Server.sendClient1("follow");
                                                             Console.WriteLine(printNew);
 
                                                         }
@@ -217,7 +165,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printNew = "follow max speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                       //     Server.sendClient2("follow");
+                                                            Server.sendClient2("follow");
                                                             Console.WriteLine(printNew);
                                                         }
                                                         printOld = printNew;
@@ -232,7 +180,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printNew = "fetch pingo speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                         //   Server.sendClient1("fetch");
+                                                            Server.sendClient1("fetch");
                                                             Console.WriteLine(printNew);
                                                         }
                                                         printOld = printNew;
@@ -242,14 +190,14 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printNew = "fetch max speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                         //   Server.sendClient2("fetch");
+                                                            Server.sendClient2("fetch");
                                                             Console.WriteLine(printNew);
                                                         }
                                                         printOld = printNew;
                                                     }
                                                 }
                                                 break;
-                                            case "comeGesture":
+                                            case "come":
                                                 {
 
                                                     if (GestureAndSpeech.come[0])
@@ -257,7 +205,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printNew = "come pingo speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                         //   Server.sendClient1("come");
+                                                            Server.sendClient1("come");
                                                             Console.WriteLine(printNew);
                                                         }
                                                         printOld = printNew;
@@ -267,7 +215,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printNew = "come max speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                         //   Server.sendClient2("come");
+                                                            Server.sendClient2("come");
                                                             Console.WriteLine(printNew);
                                                         }
                                                         printOld = printNew;
@@ -277,23 +225,23 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printNew = "come both speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                          //  Server.sendClient1("come");
-                                                         //   Server.sendClient2("come");
+                                                            Server.sendClient1("come");
+                                                            Server.sendClient2("come");
                                                             Console.WriteLine(printNew);
                                                         }
                                                         printOld = printNew;
                                                     }
                                                 }
                                                 break;
-                                            case "syncGest":
+                                            case "sync":
                                                 {
                                                     if (GestureAndSpeech.sync)
                                                     {
                                                         printNew = "sync both speech & gesture";
                                                         if (printNew != printOld)
                                                         {
-                                                    //        Server.sendClient1("sync");
-//Server.sendClient2("sync");
+                                                            Server.sendClient1("sync");
+                                                            Server.sendClient2("sync");
                                                             Console.WriteLine(printNew);
                                                         }
                                                         printOld = printNew;
