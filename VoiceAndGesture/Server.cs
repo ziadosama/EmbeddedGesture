@@ -25,12 +25,12 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             IPAddress ipAd = IPAddress.Parse("192.168.0.172");
 
             /* Initializes the Listener */
-            myList1 = new TcpListener(ipAd, 4000);
+            myList1 = new TcpListener(ipAd, 9513);
 
             /* Start Listeneting at the specified port */
             myList1.Start();
 
-            Console.WriteLine("The server is running at port 4000...");
+            Console.WriteLine("The server is running at port 9513...");
             Console.WriteLine("The local End point is  :" + myList1.LocalEndpoint);
             Console.WriteLine("Waiting for a connection.....");
 
@@ -73,13 +73,14 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
 
         public static void sendClient1(String str)
         {/*
-            Stream stm = tcpclnt1.GetStream();
             ASCIIEncoding asen = new ASCIIEncoding();
+            Stream stm = tcpclnt1.GetStream();
+
             byte[] ba = asen.GetBytes(str);
             Console.WriteLine("Transmitting.....");
 
-            stm.Write(ba, 0, ba.Length);*/
-
+            stm.Write(ba, 0, ba.Length);
+           */ 
         }
 
         public static void sendClient2(String str)
@@ -100,7 +101,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             // This constructor arbitrarily assigns the local port number.
             try
             {
-                client1();
+               // client1();
                 // client2();
 
             }

@@ -1,0 +1,47 @@
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\SpeechBasics-WPF.exe.config
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\MainWindow.g.cs
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\App.g.cs
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF_MarkupCompile.cache
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF_MarkupCompile.lref
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.exe
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.pdb
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\SpeechBasics-WPF.exe
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\SpeechBasics-WPF.pdb
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.dll
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.VisualGestureBuilder.dll
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.xml
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.VisualGestureBuilder.xml
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\MainWindow.baml
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.g.resources
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\Microsoft.Samples.Kinect.SpeechBasics.Properties.Resources.resources
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.csproj.GenerateResource.Cache
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Database\Hamza.gba
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF_Content.g.cs
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Database\comeGesture.gba
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Database\followGest.gba
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Database\Seated.gbd
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Database\syncGest.gba
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\bin\x86\Debug\Database\followGest2.gba
+C:\Users\ziadosama\Documents\Visual Studio 2015\Projects\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.csprojResolveAssemblyReference.cache
+C:\VoiceAndGesture\bin\x86\Debug\SpeechBasics-WPF.exe.config
+C:\VoiceAndGesture\bin\x86\Debug\SpeechBasics-WPF.exe
+C:\VoiceAndGesture\bin\x86\Debug\SpeechBasics-WPF.pdb
+C:\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.dll
+C:\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.VisualGestureBuilder.dll
+C:\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.xml
+C:\VoiceAndGesture\bin\x86\Debug\Microsoft.Kinect.VisualGestureBuilder.xml
+C:\VoiceAndGesture\obj\x86\Debug\MainWindow.g.cs
+C:\VoiceAndGesture\obj\x86\Debug\App.g.cs
+C:\VoiceAndGesture\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF_MarkupCompile.cache
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF_MarkupCompile.lref
+C:\VoiceAndGesture\obj\x86\Debug\MainWindow.baml
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.g.resources
+C:\VoiceAndGesture\obj\x86\Debug\Microsoft.Samples.Kinect.SpeechBasics.Properties.Resources.resources
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.csproj.GenerateResource.Cache
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.exe
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.pdb
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF.csprojResolveAssemblyReference.cache
+C:\VoiceAndGesture\bin\x86\Debug\Database\finale.gbd
+C:\VoiceAndGesture\obj\x86\Debug\SpeechBasics-WPF_Content.g.cs

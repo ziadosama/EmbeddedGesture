@@ -146,7 +146,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                     {
                                         switch (gesture.Name)
                                         {
-                                            case "follow":
+                                           /* case "follow":
                                                 {
 
                                                     if (GestureAndSpeech.follow[0])
@@ -247,7 +247,7 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
                                                         printOld = printNew;
                                                     }
                                                 }
-                                                break;
+                                                break;*/
                                             default: break;
                                         }
                                     }

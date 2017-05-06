@@ -44,6 +44,7 @@
                 }
                 else if (e.Result.Semantics.Value.ToString() == "FOLLOW MAX")
                 {
+                    Server.sendClient1("follow");
                     GestureAndSpeech.follow[(int)dog.Max] = true;
                 }
                 else if (e.Result.Semantics.Value.ToString() == "FETCH PINGO")
@@ -84,6 +85,7 @@
                 }
                 else if (e.Result.Semantics.Value.ToString() == "PLAY MAX")
                 {
+                    Console.WriteLine("sending");
                     Server.sendClient2("play");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "REST")
@@ -135,7 +137,7 @@
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            //  Server.StartListening();
+              Server.StartListening();
             // Only one sensor is supported
             this.kinectSensor = KinectSensor.GetDefault();
             if (this.kinectSensor != null)
@@ -246,21 +248,21 @@
             this.kinectBodyViewbox.DataContext = this.kinectBodyView;
 
             // create a gesture detector for each body (6 bodies => 6 detectors) and create content controls to display results in the UI
-            int col0Row = 0;
-            GestureResultView result = new GestureResultView(0, false, false, 0.5f);
-            GestureDetector detector = new GestureDetector(this.kinectSensor, result);
-            this.gestureDetectorList.Add(detector);
+            int maxBodies = this.kinectSensor.BodyFrameSource.BodyCount;
 
-            // split gesture results across the first two columns of the content grid
-            ContentControl contentControl = new ContentControl();
-            contentControl.Content = this.gestureDetectorList[0].GestureResultView;
+            for (int i = 0; i < maxBodies; ++i)
+            {
+                GestureResultView result = new GestureResultView(i, false, false, 0.0f);
+                GestureDetector detector = new GestureDetector(this.kinectSensor, result);
+                
+                this.gestureDetectorList.Add(detector);
 
-            // Gesture results for bodies: 0, 2, 4
-            Grid.SetColumn(contentControl, 0);
-            Grid.SetRow(contentControl, col0Row);
-            ++col0Row;
-
-            this.contentGrid.Children.Add(contentControl);
+                // split gesture results across the first two columns of the content grid
+                ContentControl contentControl = new ContentControl();
+                contentControl.Content = this.gestureDetectorList[i].GestureResultView;
+                
+                this.contentGrid.Children.Add(contentControl);
+            }
         }
 
         /// <summary>
@@ -347,7 +349,7 @@
                 this.speechEngine.SpeechRecognitionRejected -= this.SpeechRejected;
                 this.speechEngine.RecognizeAsyncStop();
             }
-            //Server.destructClient1();
+            Server.destructClient1();
             // Server.destructClient2();
         }
 
@@ -377,7 +379,7 @@
                 // visualize the new body data
                 this.kinectBodyView.UpdateBodyFrame(this.bodies);
 
-                int maxBodies = 1;
+                int maxBodies = this.kinectSensor.BodyFrameSource.BodyCount;
                 // we may have lost/acquired bodies, so update the corresponding gesture detectors
                 if (this.bodies != null)
                 {
