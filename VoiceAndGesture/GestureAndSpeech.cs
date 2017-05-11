@@ -7,6 +7,5 @@
         public static bool[] bark = new bool[3];
         public static bool[] come = new bool[3];
         public static bool sync = false;
-        
     }
 }

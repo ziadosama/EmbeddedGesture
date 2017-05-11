@@ -70,6 +70,12 @@
         </one-of>
       </item>
       <item>
+        <tag>  FETCH </tag>
+        <one-of>
+          <item> fetch </item>
+        </one-of>
+      </item>
+      <item>
         <tag> FETCH MAX </tag>
         <one-of>
           <item> fetch max </item>
