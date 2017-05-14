@@ -230,8 +230,8 @@
                                                          printNew = "sync both speech & gesture";
                                                          if (printNew != printOld)
                                                          {
-                                                             Server.sendClient1("sync");
-                                                             Server.sendClient2("sync");
+                                                             Server.sendClient1("synchronize");
+                                                             Server.sendClient2("synchronize");
                                                              Console.WriteLine(printNew);
                                                          }
                                                          printOld = printNew;

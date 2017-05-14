@@ -71,24 +71,24 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
 
 
         public static void sendClient1(String str)
-        {/*
+        {
             ASCIIEncoding asen = new ASCIIEncoding();
             Stream stm = tcpclnt1.GetStream();
 
             byte[] ba = asen.GetBytes(str);
             Console.WriteLine("Transmitting.....");
 
-            stm.Write(ba, 0, ba.Length);*/
+            stm.Write(ba, 0, ba.Length);
         }
 
         public static void sendClient2(String str)
         {
-            /*Stream stm = tcpclnt2.GetStream();
+            Stream stm = tcpclnt2.GetStream();
             ASCIIEncoding asen = new ASCIIEncoding();
             byte[] ba = asen.GetBytes(str);
             Console.WriteLine("Transmitting.....");
 
-            stm.Write(ba, 0, ba.Length);*/
+            stm.Write(ba, 0, ba.Length);
         }
 
 
@@ -98,8 +98,8 @@ namespace Microsoft.Samples.Kinect.SpeechBasics
             // This constructor arbitrarily assigns the local port number.
             try
             {
-                 //client1();
-                 //client2();
+                 client1();
+                 client2();
 
             }
             catch (Exception e)

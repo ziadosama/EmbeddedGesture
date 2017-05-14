@@ -2,34 +2,6 @@
   <rule id="rootRule">
     <one-of>
       <item>
-        <tag>FORWARD</tag>
-        <one-of>
-          <item> forwards </item>
-          <item> forward </item>
-          <item> straight </item>
-        </one-of>
-      </item>
-      <item>
-        <tag>BACKWARD</tag>
-        <one-of>
-          <item> backward </item>
-          <item> backwards </item>
-          <item> back </item>
-        </one-of>
-      </item>
-      <item>
-        <tag>LEFT</tag>
-        <one-of>
-          <item> turn left </item>
-        </one-of>
-      </item>
-      <item>
-        <tag>RIGHT</tag>
-        <one-of>
-          <item> turn right </item>
-        </one-of>
-      </item>
-      <item>
         <tag>  COME MAX </tag>
         <one-of>
           <item> come max </item>
@@ -47,26 +19,6 @@
         <tag>  COME </tag>
         <one-of>
           <item> come </item>
-        </one-of>
-      </item>
-      <item>
-        <tag>  BARK MAX </tag>
-        <one-of>
-          <item> bark max </item>
-          <item> max bark </item>
-        </one-of>
-      </item>
-      <item>
-        <tag>  BARK PINGO </tag>
-        <one-of>
-          <item> bark pingo </item>
-          <item> pingo bark </item>
-        </one-of>
-      </item>
-      <item>
-        <tag>  BARK </tag>
-        <one-of>
-          <item> bark </item>
         </one-of>
       </item>
       <item>
@@ -127,6 +79,12 @@
         <tag>  SYNCHRONIZE </tag>
         <one-of>
           <item> synchronize </item>
+        </one-of>
+      </item>
+      <item>
+        <tag>  FINAL </tag>
+        <one-of>
+          <item> final </item>
         </one-of>
       </item>
     </one-of>

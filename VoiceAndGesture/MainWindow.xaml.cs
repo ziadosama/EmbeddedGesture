@@ -32,11 +32,9 @@
                 if (e.Result.Semantics.Value.ToString() == "FOLLOW PINGO")
                 {
                     GestureAndSpeech.follow[(int)dog.Pingo] = true;
-                    Server.sendClient1("follow");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "FOLLOW MAX")
                 {
-                    Server.sendClient2("follow");
                     GestureAndSpeech.follow[(int)dog.Max] = true;
                 }
                 else if (e.Result.Semantics.Value.ToString() == "FETCH PINGO")
@@ -58,39 +56,36 @@
                 else if (e.Result.Semantics.Value.ToString() == "BARK PINGO")
                 {
                     GestureAndSpeech.bark[(int)dog.Pingo] = true;
-                    Server.sendClient1("bark");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "BARK MAX")
                 {
                     GestureAndSpeech.bark[(int)dog.Max] = true;
-                    Server.sendClient2("bark");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "COME PINGO")
                 {
                     GestureAndSpeech.come[(int)dog.Pingo] = true;
-                    Server.sendClient1("come");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "COME MAX")
                 {
                     GestureAndSpeech.come[(int)dog.Max] = true;
-                    Server.sendClient2("come");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "COME")
                 {
                     GestureAndSpeech.come[(int)dog.both] = true;
-                    Server.sendClient1("come");
-                    Server.sendClient2("come");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "SYNCHRONIZE")
                 {
                     GestureAndSpeech.sync = true;
-                    Server.sendClient1("synchronize");
-                    Server.sendClient2("synchronize");
                 }
                 else if (e.Result.Semantics.Value.ToString() == "PLAY PINGO")
                 {
                     Server.sendClient1("play");
                 }
+                //else if (e.Result.Semantics.Value.ToString() == "FINAL")
+                //{
+                //    Server.sendClient1("end");
+                //    Server.sendClient2("end");
+                //}
                 else if (e.Result.Semantics.Value.ToString() == "PLAY MAX")
                 {
                     Server.sendClient2("play");
@@ -313,8 +308,8 @@
                 this.speechEngine.SpeechRecognitionRejected -= this.SpeechRejected;
                 this.speechEngine.RecognizeAsyncStop();
             }
-           // Server.destructClient1();
-          //  Server.destructClient2();
+            Server.destructClient1();
+            Server.destructClient2();
         }
 
         private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
